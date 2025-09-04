@@ -15,6 +15,7 @@ function App() {
   const sesionUsuario =
     JSON.parse(sessionStorage.getItem("usuarioKey")) || false;
   const [usuarioLogueado, setUsuarioLogueado] = useState(sesionUsuario);
+  const [productos, setProductos] =useState([])
 
   useEffect(() => {
     sessionStorage.setItem("usuarioKey", JSON.stringify(usuarioLogueado));
@@ -30,17 +31,14 @@ function App() {
         <main className="container my-3">
           <Routes>
             <Route path="/" element={<Inicio></Inicio>} />
-
             <Route
               path="/detalle"
               element={<DetalleProducto></DetalleProducto>}
             />
-            
             <Route
               path="/login"
               element={<Login setUsuarioLogueado={setUsuarioLogueado}></Login>}
             />
-
             <Route
               path="/administrador"
               element={
@@ -51,14 +49,12 @@ function App() {
             >
               <Route
                 index
-                element={<Administrador></Administrador>}
+                element={<Administrador setProductos={setProductos} productos={productos}></Administrador>}
               />
-
               <Route
                 path="crear"
                 element={<FormularioProducto></FormularioProducto>}
               />
-
               <Route
                 path="editar"
                 element={<FormularioProducto></FormularioProducto>}
@@ -66,7 +62,6 @@ function App() {
             </Route>
 
             <Route path="*" element={<Error404></Error404>} />
-
           </Routes>
         </main>
         <Footer></Footer>
