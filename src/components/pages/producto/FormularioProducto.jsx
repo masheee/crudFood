@@ -1,7 +1,9 @@
 import { Form, Button } from "react-bootstrap";
 import { useForm } from "react-hook-form";
+import Swal from "sweetalert2";
+import { v4 as uuidv4 } from 'uuid';
 
-const FormularioProducto = () => {
+const FormularioProducto = ({ titulo, crearProducto }) => {
   const {
     register,
     handleSubmit,
@@ -10,14 +12,27 @@ const FormularioProducto = () => {
     formState: { errors },
   } = useForm();
 
-  const onSubmit = (data) =>{
-    //agregar id
-    console.log(data);
-  }
+  const onSubmit = (data) => {
+    if (titulo === "Crear Producto") {
+      //agregar id
+      data.id = uuidv4();
+      console.log(data);
+      if (crearProducto(data)) {
+        Swal.fire({
+          title: "Producto creado",
+          text: `El producto ${data.nombreProducto} se creo correctamente`,
+          icon: "success",
+        });
+        reset();
+      }
+    } else {
+      //aqui tengo que agregar el editar
+    }
+  };
 
   return (
     <section className="container mainSection">
-      <h1 className="display-4 mt-5">Crear producto</h1>
+      <h1 className="display-4 mt-5">{titulo}</h1>
       <hr />
       <Form className="my-4" onSubmit={handleSubmit(onSubmit)}>
         <Form.Group className="mb-3" controlId="formNombreProdcuto">

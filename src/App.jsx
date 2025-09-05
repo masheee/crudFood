@@ -14,12 +14,48 @@ BrowserRouter;
 function App() {
   const sesionUsuario =
     JSON.parse(sessionStorage.getItem("usuarioKey")) || false;
+  const productosLS = JSON.parse(localStorage.getItem("productosKey")) || [];
   const [usuarioLogueado, setUsuarioLogueado] = useState(sesionUsuario);
-  const [productos, setProductos] =useState([])
+  const [productos, setProductos] = useState(productosLS);
 
   useEffect(() => {
     sessionStorage.setItem("usuarioKey", JSON.stringify(usuarioLogueado));
   }, [usuarioLogueado]);
+
+  useEffect(() => {
+    localStorage.setItem("productosKey", JSON.stringify(productos));
+  }, [productos]);
+
+  const crearProducto = (productoNuevo)=>{
+    setProductos([...productos, productoNuevo])
+    return true
+  }
+
+  const borrarProducto = (idProducto)=>{
+    const productosFiltrados = productos.filter((itemProducto)=> itemProducto.id !== idProducto)
+    setProductos(productosFiltrados)
+    return true
+  }
+
+  const buscarProducto = (idProducto)=>{
+    const productoBuscado = productos.find((itemProducto)=> itemProducto === idProducto)
+    return productoBuscado;
+  }
+
+  const modificarProducto = (idProducto, datosProducto) => {
+    const productosActualizados = productos.map((itemProducto)=>{
+      if(itemProducto.id === idProducto){
+        //actualizar el producto
+        return{
+          ...itemProducto,
+          ...datosProducto
+        }
+      }
+      return itemProducto
+    })
+    //actualizar el state
+    setProductos(productosActualizados)
+  }
 
   return (
     <>
@@ -49,15 +85,21 @@ function App() {
             >
               <Route
                 index
-                element={<Administrador setProductos={setProductos} productos={productos}></Administrador>}
+                element={
+                  <Administrador
+                    setProductos={setProductos}
+                    productos={productos}
+                    borrarProducto={borrarProducto}
+                  ></Administrador>
+                }
               />
               <Route
                 path="crear"
-                element={<FormularioProducto></FormularioProducto>}
+                element={<FormularioProducto titulo='Crear Producto' crearProducto={crearProducto}></FormularioProducto>}
               />
               <Route
-                path="editar"
-                element={<FormularioProducto></FormularioProducto>}
+                path="editar/:id"
+                element={<FormularioProducto titulo='Editar Producto'></FormularioProducto>}
               />
             </Route>
 

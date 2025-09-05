@@ -2,7 +2,7 @@ import { Button } from "react-bootstrap";
 import { Link } from "react-router";
 import Swal from "sweetalert2";
 
-const ItemProducto = ({itemProducto}) => {
+const ItemProducto = ({ itemProducto, borrarProducto }) => {
   const eliminarProducto = () => {
     Swal.fire({
       title: "¿Estas seguro de eliminar?",
@@ -13,13 +13,15 @@ const ItemProducto = ({itemProducto}) => {
       cancelButtonColor: "#d33",
       confirmButtonText: "Borrar",
       cancelButtonText: "Cancelar",
-    }).then(async (result) => {
+    }).then((result) => {
       if (result.isConfirmed) {
-        Swal.fire({
-          title: "Producto eliminado",
-          text: `El producto eliminado correctamente`,
-          icon: "success",
-        });
+        if (borrarProducto(itemProducto.id)) {
+          Swal.fire({
+            title: "Producto eliminado",
+            text: `El producto eliminado correctamente`,
+            icon: "success",
+          });
+        }
       }
     });
   };
@@ -38,13 +40,10 @@ const ItemProducto = ({itemProducto}) => {
       </td>
       <td>{itemProducto.categoria}</td>
       <td className="text-center">
-        <Link
-          className="me-lg-2 btn btn-warning"
-          to={`/administrador/editar`}
-        >
+        <Link className="me-lg-2 btn btn-warning" to={`/administrador/editar/${itemProducto.id}`}>
           <i className="bi bi-pencil-square"></i>
         </Link>
-        <Button variant="danger" >
+        <Button variant="danger" onClick={eliminarProducto}>
           <i className="bi bi-trash"></i>
         </Button>
       </td>

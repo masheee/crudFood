@@ -4,7 +4,7 @@ import { Link } from "react-router";
 import productosPrueba from "../../data/productosPrueba";
 
 
-const Administrador = ({setProductos, productos}) => {
+const Administrador = ({setProductos, productos, borrarProducto}) => {
 
   const cargarProductosPrueba =()=>{
     setProductos(productosPrueba)
@@ -41,7 +41,7 @@ const Administrador = ({setProductos, productos}) => {
         </thead>
         <tbody>
           {
-            productos.map((itemProducto)=> <ItemProducto itemProducto={itemProducto} key={itemProducto.id}></ItemProducto>)
+            productos.map((itemProducto)=> <ItemProducto itemProducto={itemProducto} key={itemProducto.id} borrarProducto={borrarProducto}></ItemProducto>)
           }
         </tbody>
       </Table>
