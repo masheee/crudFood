@@ -1,9 +1,12 @@
+import { useEffect } from "react";
 import { Form, Button } from "react-bootstrap";
 import { useForm } from "react-hook-form";
+import { useNavigate, useParams } from "react-router";
 import Swal from "sweetalert2";
 import { v4 as uuidv4 } from 'uuid';
 
-const FormularioProducto = ({ titulo, crearProducto }) => {
+
+const FormularioProducto = ({ titulo, crearProducto, buscarProducto, modificarProducto }) => {
   const {
     register,
     handleSubmit,
@@ -11,6 +14,22 @@ const FormularioProducto = ({ titulo, crearProducto }) => {
     setValue,
     formState: { errors },
   } = useForm();
+  const { id } = useParams();
+  const navegacion = useNavigate();
+
+  useEffect(() => {
+    if(titulo === 'Editar Producto'){
+      console.log(id)
+      const productoBuscado = buscarProducto(id)
+      console.log(productoBuscado)
+     setValue('nombreProducto', productoBuscado.nombreProducto)
+     setValue('precio', productoBuscado.precio)
+     setValue('imagen', productoBuscado.imagen)
+     setValue('descripcion_breve', productoBuscado.descripcion_breve)
+     setValue('descripcion_amplia', productoBuscado.descripcion_amplia)
+     setValue('categoria', productoBuscado.categoria)
+    }
+  })
 
   const onSubmit = (data) => {
     if (titulo === "Crear Producto") {
@@ -27,6 +46,23 @@ const FormularioProducto = ({ titulo, crearProducto }) => {
       }
     } else {
       //aqui tengo que agregar el editar
+      if(modificarProducto(id,data)){
+        //mostrar un cartel de producto modificado
+        Swal.fire({
+          title: "Producto modificado",
+          text: `El producto ${data.nombreProducto} se actualizo correctamente`,
+          icon: "success",
+        });
+        //redireccionar a la tabla del administrador
+        navegacion('/administrador')
+      }else{
+        //sin no se modifico mostrar un mensaje de error
+         Swal.fire({
+          title: "Ocurrio un error",
+          text: `No se pudo actualizar el producto ${data.nombreProducto}`,
+          icon: "error",
+        });
+      }
     }
   };
 
@@ -110,6 +146,7 @@ const FormularioProducto = ({ titulo, crearProducto }) => {
           >
             <option value="">Seleccione una opcion</option>
             <option value="Acompañamientos">Acompañamientos</option>
+            <option value="Bebidas">Bebidas</option>
             <option value="Ensaladas">Ensaladas</option>
             <option value="Hamburguesas">Hamburguesas</option>
             <option value="Postres">Postres</option>

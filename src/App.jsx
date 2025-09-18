@@ -9,7 +9,6 @@ import Login from "./components/pages/Login";
 import { BrowserRouter, Routes, Route } from "react-router";
 import { useEffect, useState } from "react";
 import ProtectorAdmin from "./components/routes/ProtectorAdmin";
-BrowserRouter;
 
 function App() {
   const sesionUsuario =
@@ -26,36 +25,37 @@ function App() {
     localStorage.setItem("productosKey", JSON.stringify(productos));
   }, [productos]);
 
-  const crearProducto = (productoNuevo)=>{
-    setProductos([...productos, productoNuevo])
-    return true
-  }
+  const crearProducto = (productoNuevo) => {
+    setProductos([...productos, productoNuevo]);
+    return true;
+  };
 
-  const borrarProducto = (idProducto)=>{
-    const productosFiltrados = productos.filter((itemProducto)=> itemProducto.id !== idProducto)
-    setProductos(productosFiltrados)
-    return true
-  }
+  const borrarProducto = (idProducto) => {
+    const productosFiltrados = productos.filter(
+      (itemProducto) => itemProducto.id !== idProducto
+    );
+    setProductos(productosFiltrados);
+    return true;
+  };
 
-  const buscarProducto = (idProducto)=>{
-    const productoBuscado = productos.find((itemProducto)=> itemProducto === idProducto)
+  const buscarProducto = (idProducto) => {
+    const productoBuscado = productos.find((prod) => prod.id === idProducto);
     return productoBuscado;
-  }
+  };
 
   const modificarProducto = (idProducto, datosProducto) => {
-    const productosActualizados = productos.map((itemProducto)=>{
-      if(itemProducto.id === idProducto){
-        //actualizar el producto
-        return{
+    const productosActualizados = productos.map((itemProducto) => {
+      if (itemProducto.id === idProducto) {
+        return {
           ...itemProducto,
-          ...datosProducto
-        }
+          ...datosProducto,
+        };
       }
-      return itemProducto
-    })
-    //actualizar el state
-    setProductos(productosActualizados)
-  }
+      return itemProducto;
+    });
+    setProductos(productosActualizados);
+    return true;
+  };
 
   return (
     <>
@@ -66,11 +66,17 @@ function App() {
         ></Menu>
         <main className="container my-3">
           <Routes>
-            <Route path="/" element={<Inicio></Inicio>} />
+            {/* Inicio con productos dinámicos */}
+            <Route path="/" element={<Inicio productos={productos}></Inicio>} />
+
+            {/* Detalle dinámico con ID */}
             <Route
-              path="/detalle"
-              element={<DetalleProducto></DetalleProducto>}
+              path="/detalle/:id"
+              element={
+                <DetalleProducto buscarProducto={buscarProducto}></DetalleProducto>
+              }
             />
+
             <Route
               path="/login"
               element={<Login setUsuarioLogueado={setUsuarioLogueado}></Login>}
@@ -95,11 +101,22 @@ function App() {
               />
               <Route
                 path="crear"
-                element={<FormularioProducto titulo='Crear Producto' crearProducto={crearProducto}></FormularioProducto>}
+                element={
+                  <FormularioProducto
+                    titulo="Crear Producto"
+                    crearProducto={crearProducto}
+                  ></FormularioProducto>
+                }
               />
               <Route
                 path="editar/:id"
-                element={<FormularioProducto titulo='Editar Producto'></FormularioProducto>}
+                element={
+                  <FormularioProducto
+                    titulo="Editar Producto"
+                    buscarProducto={buscarProducto}
+                    modificarProducto={modificarProducto}
+                  ></FormularioProducto>
+                }
               />
             </Route>
 
