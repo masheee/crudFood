@@ -1,27 +1,32 @@
 import { Col, Card } from "react-bootstrap";
 import { Link } from "react-router";
 
-const CardProducto = () => {
+const CardProducto = ({ itemProducto }) => {
   return (
     <Col md={4} lg={3} className="mb-3">
       <Card className="h-100">
         <div>
           <img
-            src="https://images.pexels.com/photos/2619970/pexels-photo-2619970.jpeg"
-            alt='pizza'
+          //usamos la URL de la imagen del producto
+            src={itemProducto.imagen}
+            alt={itemProducto.nombreProducto}
             className="card-img-top-nueva"
           />
         </div>
         <Card.Body>
-          <Card.Title>Pizza Margarita Clásica</Card.Title>
+          {/* usamos el nombre del producto */}
+          <Card.Title> {itemProducto.nombreProducto} </Card.Title>
           <Card.Text>
-            Pizza tradicional con salsa de tomate, mozzarella y albahaca.
+            {/* usamos la descripcion breve del producto */}
+            {itemProducto.descripcion_breve}
             <br className="mb-2" />
-            <span className="fw-bold">Precio: $4500</span>
+            {/* usamos el precio del producto */}
+            <span className="fw-bold"> {itemProducto.precio} </span>
           </Card.Text>
         </Card.Body>
         <Card.Footer className="text-end">
-          <Link className="me-2 btn btn-success" to={'/detalle/' }>
+          {/* enlazamos la ruta "/detalle/" con el "_id" del producto (ver mas) */}
+          <Link className="me-2 btn btn-success" to={`/detalle/${itemProducto._id}`}>
             Ver más
           </Link>
         </Card.Footer>

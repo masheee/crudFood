@@ -2,21 +2,19 @@ import { Table } from "react-bootstrap";
 import ItemProducto from "./producto/ItemProducto";
 import { Link } from "react-router";
 import { useEffect, useState } from "react";
-import { listarProducto } from "../../helpers/queries";
+import { listarProductos } from "../../helpers/queries";
 
+const Administrador = ({ borrarProducto }) => {
+  const [productos, setProductos] = useState([]);
 
-const Administrador = ({borrarProducto}) => {
+  useEffect(() => {
+    obtenerProductos();
+  }, []);
 
-  const [productos, setProductos] = useState([])
-
-  useEffect(()=>{
-    obtenerProducto();
-  },[])
-
-  const obtenerProducto = async ()=>{
+  const obtenerProductos = async() => {
     //1-solicitar los datos al backend con la funcion de queries
-    const respuesta = await listarProducto()
-    //2-verificar que los datos llegaron correctamente
+    const respuesta = await listarProductos()
+    //2- verificar que los datos llegaron correctamente
     if(respuesta.status === 200){
       const datos = await respuesta.json()
       //3-cargo los productos en el state
@@ -32,7 +30,6 @@ const Administrador = ({borrarProducto}) => {
           <Link className="btn btn-primary me-2" to={"/administrador/crear"}>
             <i className="bi bi-file-earmark-plus"></i>
           </Link>
-          
         </div>
       </div>
       <hr />
@@ -48,9 +45,14 @@ const Administrador = ({borrarProducto}) => {
           </tr>
         </thead>
         <tbody>
-          {
-            productos.map((itemProducto, indice)=> <ItemProducto itemProducto={itemProducto} key={itemProducto.id} borrarProducto={borrarProducto} fila={indice + 1}></ItemProducto>)
-          }
+          {productos.map((itemProducto, indice) => (
+            <ItemProducto
+              itemProducto={itemProducto}
+              key={itemProducto._id}
+              borrarProducto={borrarProducto}
+              fila={indice + 1}
+            ></ItemProducto>
+          ))}
         </tbody>
       </Table>
     </section>

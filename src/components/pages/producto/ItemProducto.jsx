@@ -1,6 +1,7 @@
 import { Button } from "react-bootstrap";
 import { Link } from "react-router";
 import Swal from "sweetalert2";
+import { borrarProductoAPI } from "../../../helpers/queries";
 
 const ItemProducto = ({ itemProducto, borrarProducto, fila }) => {
   const eliminarProducto = () => {
@@ -13,13 +14,20 @@ const ItemProducto = ({ itemProducto, borrarProducto, fila }) => {
       cancelButtonColor: "#d33",
       confirmButtonText: "Borrar",
       cancelButtonText: "Cancelar",
-    }).then((result) => {
+    }).then( async (result) => {
       if (result.isConfirmed) {
-        if (borrarProducto(itemProducto.id)) {
+        const respuesta = await borrarProductoAPI(itemProducto._id) 
+        if (respuesta.status === 200) {
           Swal.fire({
             title: "Producto eliminado",
             text: `El producto eliminado correctamente`,
             icon: "success",
+          });
+        }else{
+          Swal.fire({
+            title: "Producto eliminado",
+            text: `El producto eliminado correctamente`,
+            icon: "error",
           });
         }
       }
@@ -40,7 +48,7 @@ const ItemProducto = ({ itemProducto, borrarProducto, fila }) => {
       </td>
       <td>{itemProducto.categoria}</td>
       <td className="text-center">
-        <Link className="me-lg-2 btn btn-warning" to={`/administrador/editar/${itemProducto.id}`}>
+        <Link className="me-lg-2 btn btn-warning" to={`/administrador/editar/${itemProducto._id}`}>
           <i className="bi bi-pencil-square"></i>
         </Link>
         <Button variant="danger" onClick={eliminarProducto}>

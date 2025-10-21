@@ -1,9 +1,29 @@
 import { Container, Form, Row } from "react-bootstrap";
 import CardProducto from "./producto/CardProducto";
-import { useState } from "react";
+import { useState, useEffect } from "react";
+import { listarProductos } from "../../helpers/queries.js"
 
-const Inicio = ({ productos }) => {
+const Inicio = () => {
+  //se utiliza
+  const [productos, setProductos] = useState([]);
   const [busqueda, setBusqueda] = useState("");
+
+  //logica para la carga de productos desde el backend
+  useEffect(() => {
+    obtenerProductos()
+  }, []);
+
+  //GET de la lista
+  const obtenerProductos = async() => {
+    const respuesta = await listarProductos()
+
+    //verificar la respuesta (200)
+    if(respuesta.status === 200){
+      const datos = await respuesta.json()
+      //se cargan los datos en el estado
+      setProductos(datos)
+    }
+  }
 
   const productosFiltrados = productos.filter((prod) =>
     prod.nombreProducto.toLowerCase().includes(busqueda.toLowerCase())
@@ -32,8 +52,9 @@ const Inicio = ({ productos }) => {
         </Form>
         <Row>
           {productosFiltrados.length > 0 ? (
+            //key: id --> _id
             productosFiltrados.map((prod) => (
-              <CardProducto key={prod.id} itemProducto={prod} />
+              <CardProducto key={prod._id} itemProducto={prod} />
             ))
           ) : (
             <p>No hay productos disponibles</p>
