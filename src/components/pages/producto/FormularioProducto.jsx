@@ -7,8 +7,7 @@ import { v4 as uuidv4 } from "uuid";
 import { crearProducto, editarProductoAPI, obtenerProducto } from "../../../helpers/queries";
 
 const FormularioProducto = ({
-  titulo,
-  modificarProducto,
+  titulo
 }) => {
   const {
     register,
